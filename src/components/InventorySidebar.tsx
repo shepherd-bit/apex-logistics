@@ -73,6 +73,9 @@ export default function InventorySidebar({ items }: InventorySidebarProps) {
             <div
               key={item.id}
               draggable
+              onDragStart={(e) => {
+                e.dataTransfer.setData('text/plain', item.id);
+              }}
               className="bg-white border-2 border-slate-300 rounded-xl p-3 shadow-xs hover:border-indigo-400 hover:shadow-md transition-all cursor-grab active:cursor-grabbing group"
             >
               <div className="flex items-start justify-between gap-2 mb-1.5">

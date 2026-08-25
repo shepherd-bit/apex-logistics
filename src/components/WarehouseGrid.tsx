@@ -38,16 +38,22 @@ export default function WarehouseGrid({ bins, heatmapEnabled, onDropItem, onRemo
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {zoneBins.map((bin) => (
-                  <BinCard
+                  <div
                     key={bin.id}
-                    bin={bin}
-                    heatmapEnabled={heatmapEnabled}
-                    onDropItem={(binId) => {
-                      const draggedItemId = dataTransferGetData(); 
-                      if (draggedItemId) onDropItem(binId, draggedItemId);
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const itemId = e.dataTransfer.getData('text/plain');
+                      if (itemId) onDropItem(bin.id, itemId);
                     }}
-                    onRemoveItem={onRemoveItem}
-                  />
+                  >
+                    <BinCard
+                      bin={bin}
+                      heatmapEnabled={heatmapEnabled}
+                      onDropItem={() => {}}
+                      onRemoveItem={onRemoveItem}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -56,9 +62,4 @@ export default function WarehouseGrid({ bins, heatmapEnabled, onDropItem, onRemo
       </div>
     </main>
   );
-}
-
-// Helper to grab dragged item ID safely from HTML5 drag-and-drop
-function dataTransferGetData(): string | null {
-  return (window as any).__draggedItemId || null;
 }
