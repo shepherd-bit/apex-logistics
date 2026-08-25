@@ -66,7 +66,7 @@ export default function App() {
           onDropItem={handleDropItem} 
           onRemoveItem={handleRemoveItem} 
         />
-        <OptimizationPanel />
+        <OptimizationPanel bins={bins} />
       </div>
     </div>
   );
