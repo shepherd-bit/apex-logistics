@@ -1,4 +1,4 @@
-import { Package, ShieldAlert, RotateCcw, LayoutDashboard } from 'lucide-react';
+import { Package, ShieldAlert, RotateCcw, LayoutDashboard, Flame } from 'lucide-react';
 import type { WarehouseBin } from './MockData';
 
 interface NavbarProps {
@@ -58,18 +58,37 @@ export default function Navbar({ bins, onResetLayout, heatmapEnabled, onToggleHe
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
+          {/* Thermal Heatmap Toggle Switch */}
           <button
             onClick={onToggleHeatmap}
-            className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-colors border-2 shadow-xs ${
-              heatmapEnabled 
-                ? 'bg-indigo-50 text-indigo-700 border-indigo-300 shadow-xs' 
-                : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
-            }`}
+            type="button"
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-50 transition-colors shadow-xs cursor-pointer group"
+            title="Toggle Warehouse Heatmap"
           >
-            {heatmapEnabled ? 'Heatmap: Active' : 'Heatmap: Off'}
+            <div className="flex items-center gap-1.5">
+              <Flame className={`w-3.5 h-3.5 transition-colors ${heatmapEnabled ? 'text-rose-500' : 'text-slate-400'}`} />
+              <span className="text-xs font-semibold text-slate-700">Heatmap</span>
+            </div>
+            
+            {/* The Switch Track */}
+            <div 
+              className={`w-10 h-6 flex items-center rounded-full p-1 transition-all duration-300 shadow-inner ${
+                heatmapEnabled 
+                  ? 'bg-gradient-to-r from-amber-500 to-rose-500 shadow-rose-200' 
+                  : 'bg-slate-300'
+              }`}
+            >
+              {/* The White Knob */}
+              <div 
+                className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                  heatmapEnabled ? 'translate-x-4' : 'translate-x-0'
+                }`} 
+              />
+            </div>
           </button>
 
+          {/* Reset Layout Button */}
           <button
             onClick={onResetLayout}
             className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition-colors shadow-xs"
