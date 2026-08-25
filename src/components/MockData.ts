@@ -10,7 +10,7 @@ export interface InventoryItem {
 export interface WarehouseBin {
   id: string;
   zone: 'Aisle 1 (Fast Pick)' | 'Aisle 2 (Standard)' | 'Aisle 3 (Bulk/Heavy)';
-  shelfLevel: 1 | 2 | 3 | 4; // Level 1 is floor level (best for heavy), Level 4 is top shelf
+  shelfLevel: 1 | 2 | 3 | 4;
   assignedItem: InventoryItem | null;
 }
 
@@ -22,42 +22,53 @@ export const INITIAL_ITEMS: InventoryItem[] = [
   { id: 'item-5', name: 'USB-C Cable', sku: 'SKU-104', weight: 'Light', pickFrequency: 'High', category: 'Electronics' },
   { id: 'item-6', name: 'Bulk Bottled Water (Case)', sku: 'SKU-501', weight: 'Heavy', pickFrequency: 'High', category: 'Grocery' },
   { id: 'item-7', name: 'Ceramic Coffee Mug', sku: 'SKU-210', weight: 'Medium', pickFrequency: 'Low', category: 'Kitchen' },
+  { id: 'item-8', name: 'Mechanical Keyboard', sku: 'SKU-102', weight: 'Medium', pickFrequency: 'High', category: 'Electronics' },
+  { id: 'item-9', name: 'Bluetooth Speaker', sku: 'SKU-103', weight: 'Light', pickFrequency: 'Medium', category: 'Electronics' },
+  { id: 'item-10', name: 'LED Desk Lamp', sku: 'SKU-105', weight: 'Medium', pickFrequency: 'Low', category: 'Electronics' },
+  { id: 'item-11', name: 'Portable Power Bank', sku: 'SKU-106', weight: 'Light', pickFrequency: 'High', category: 'Electronics' },
+  { id: 'item-12', name: 'Stainless Steel Water Bottle', sku: 'SKU-211', weight: 'Medium', pickFrequency: 'High', category: 'Kitchen' },
+  { id: 'item-13', name: 'Non-Stick Saucepan', sku: 'SKU-212', weight: 'Heavy', pickFrequency: 'Medium', category: 'Cookware' },
+  { id: 'item-14', name: 'Chef Knife Set', sku: 'SKU-213', weight: 'Medium', pickFrequency: 'Low', category: 'Kitchen' },
+  { id: 'item-15', name: 'Glass Storage Containers', sku: 'SKU-214', weight: 'Heavy', pickFrequency: 'Low', category: 'Kitchen' },
+  { id: 'item-16', name: 'Resistance Bands Set', sku: 'SKU-310', weight: 'Light', pickFrequency: 'Medium', category: 'Fitness' },
+  { id: 'item-17', name: 'Adjustable Dumbbell', sku: 'SKU-311', weight: 'Heavy', pickFrequency: 'High', category: 'Fitness' },
+  { id: 'item-18', name: 'Foam Roller', sku: 'SKU-312', weight: 'Light', pickFrequency: 'Low', category: 'Fitness' },
+  { id: 'item-19', name: 'Exercise Ball', sku: 'SKU-313', weight: 'Medium', pickFrequency: 'Low', category: 'Fitness' },
+  { id: 'item-20', name: 'Cordless Leaf Blower', sku: 'SKU-413', weight: 'Heavy', pickFrequency: 'Low', category: 'Tools' },
+  { id: 'item-21', name: 'Digital Multimeter', sku: 'SKU-414', weight: 'Light', pickFrequency: 'Medium', category: 'Tools' },
+  { id: 'item-22', name: 'Heavy Duty Tool Chest', sku: 'SKU-415', weight: 'Heavy', pickFrequency: 'Low', category: 'Tools' },
+  { id: 'item-23', name: 'Screwdriver Assortment', sku: 'SKU-416', weight: 'Medium', pickFrequency: 'High', category: 'Tools' },
+  { id: 'item-24', name: 'Organic Honey (Case)', sku: 'SKU-502', weight: 'Medium', pickFrequency: 'Medium', category: 'Grocery' },
+  { id: 'item-25', name: 'Artisan Coffee Beans', sku: 'SKU-503', weight: 'Light', pickFrequency: 'High', category: 'Grocery' },
+  { id: 'item-26', name: 'Canned Olive Oil Pack', sku: 'SKU-504', weight: 'Heavy', pickFrequency: 'Medium', category: 'Grocery' },
+  { id: 'item-27', name: 'Herbal Tea Selection', sku: 'SKU-505', weight: 'Light', pickFrequency: 'Low', category: 'Grocery' },
+  { id: 'item-28', name: 'Ergonomic Office Chair', sku: 'SKU-601', weight: 'Heavy', pickFrequency: 'Low', category: 'Furniture' },
+  { id: 'item-29', name: 'Standing Desk Converter', sku: 'SKU-602', weight: 'Heavy', pickFrequency: 'Medium', category: 'Furniture' },
+  { id: 'item-30', name: 'Monitor Arm Mount', sku: 'SKU-603', weight: 'Medium', pickFrequency: 'Medium', category: 'Furniture' },
 ];
 
 export const INITIAL_BINS: WarehouseBin[] = [
-  // Aisle 1 (Fast Pick - closest to packing station)
   { id: 'bin-101', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 1, assignedItem: null },
   { id: 'bin-102', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 2, assignedItem: null },
   { id: 'bin-103', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 3, assignedItem: null },
   { id: 'bin-104', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 4, assignedItem: null },
-
-  // Aisle 2 (Standard zone)
   { id: 'bin-201', zone: 'Aisle 2 (Standard)', shelfLevel: 1, assignedItem: null },
   { id: 'bin-202', zone: 'Aisle 2 (Standard)', shelfLevel: 2, assignedItem: null },
   { id: 'bin-203', zone: 'Aisle 2 (Standard)', shelfLevel: 3, assignedItem: null },
   { id: 'bin-204', zone: 'Aisle 2 (Standard)', shelfLevel: 4, assignedItem: null },
-
-  // Aisle 3 (Bulk / Heavy zone - further away)
   { id: 'bin-301', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 1, assignedItem: null },
   { id: 'bin-302', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 2, assignedItem: null },
   { id: 'bin-303', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 3, assignedItem: null },
   { id: 'bin-304', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 4, assignedItem: null },
 ];
 
-/**
- * Calculates safety / efficiency score and returns heatmap color class
- * Rule: Heavy items on Level 4 = Ergonomic Hazard (Red)
- * Rule: High pick frequency in Aisle 1 (Levels 1-2) = Optimal (Green)
- */
 export function getBinHeatmapStatus(bin: WarehouseBin): { status: 'optimal' | 'warning' | 'danger' | 'empty'; message: string; color: string } {
   if (!bin.assignedItem) {
     return { status: 'empty', message: 'Empty slot', color: 'bg-slate-50 border-dashed border-slate-300' };
   }
 
-  const { weight, pickFrequency } = bin.assignedItem;
-
-  // Danger: Heavy item on top shelf (Level 4) is an extreme ergonomic hazard
-  if (weight === 'Heavy' && bin.shelfLevel === 4) {
+  const hasDanger = bin.assignedItem.weight === 'Heavy' && bin.shelfLevel === 4;
+  if (hasDanger) {
     return { 
       status: 'danger', 
       message: 'Ergonomic Hazard: Heavy item stored on top shelf!', 
@@ -65,8 +76,8 @@ export function getBinHeatmapStatus(bin: WarehouseBin): { status: 'optimal' | 'w
     };
   }
 
-  // Warning: High pick frequency item placed far away in Aisle 3
-  if (pickFrequency === 'High' && bin.zone === 'Aisle 3 (Bulk/Heavy)') {
+  const hasWarning = bin.assignedItem.pickFrequency === 'High' && bin.zone === 'Aisle 3 (Bulk/Heavy)';
+  if (hasWarning) {
     return { 
       status: 'warning', 
       message: 'Inefficient Travel: High-pick item placed in distant zone.', 
@@ -74,18 +85,9 @@ export function getBinHeatmapStatus(bin: WarehouseBin): { status: 'optimal' | 'w
     };
   }
 
-  // Optimal: High pick frequency in Aisle 1 (Low shelf levels) or Light item anywhere
-  if ((pickFrequency === 'High' && bin.zone === 'Aisle 1 (Fast Pick)' && bin.shelfLevel <= 2) || (weight === 'Light')) {
-    return { 
-      status: 'optimal', 
-      message: 'Optimal Placement', 
-      color: 'bg-emerald-50 border-emerald-300 text-emerald-900 shadow-sm' 
-    };
-  }
-
   return { 
     status: 'optimal', 
-    message: 'Acceptable Placement', 
-    color: 'bg-white border-slate-200 text-slate-800 shadow-xs' 
+    message: 'Optimal Placement', 
+    color: 'bg-emerald-50 border-emerald-300 text-emerald-900 shadow-sm' 
   };
 }

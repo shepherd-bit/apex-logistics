@@ -46,12 +46,12 @@ export default function App() {
     );
 
     if (removedItem) {
-      setItems((prevItems) => [...prevItems, removedItem!]);
+      setItems((prevItems) => [removedItem!, ...prevItems]);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col text-slate-800">
+    <div className="h-screen overflow-hidden flex flex-col text-slate-800 bg-slate-100">
       <Navbar 
         bins={bins} 
         onResetLayout={handleResetLayout} 

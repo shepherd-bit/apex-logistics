@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PackageOpen, Search, GripVertical } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { InventoryItem } from './MockData';
 
 interface InventorySidebarProps {
@@ -19,9 +20,14 @@ export default function InventorySidebar({ items }: InventorySidebarProps) {
   });
 
   return (
-    <aside className="w-80 bg-white border-r-2 border-slate-300 flex flex-col h-full shadow-sm">
+    <motion.aside 
+      initial={{ x: -30, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className="w-80 bg-white border-r-2 border-slate-300 flex flex-col h-full shadow-sm"
+    >
       {/* Sidebar Header */}
-      <div className="p-4 border-b-2 border-slate-300 bg-slate-50/50">
+      <div className="p-4 border-b-2 border-slate-300 bg-slate-50/50 shrink-0">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <PackageOpen className="w-4 h-4 text-indigo-600" />
@@ -50,7 +56,7 @@ export default function InventorySidebar({ items }: InventorySidebarProps) {
             <button
               key={weight}
               onClick={() => setSelectedWeight(weight)}
-              className={`flex-1 py-1 text-[11px] font-semibold rounded-lg border-2 transition-colors ${
+              className={`flex-1 py-1 text-[11px] font-semibold rounded-lg border-2 transition-colors cursor-pointer ${
                 selectedWeight === weight
                   ? 'bg-indigo-600 text-white border-indigo-700 shadow-xs'
                   : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
@@ -62,50 +68,61 @@ export default function InventorySidebar({ items }: InventorySidebarProps) {
         </div>
       </div>
 
-      {/* Items Scrollable List */}
+      {/* Items Scrollable List with Independent Scrolling */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/30">
         {filteredItems.length === 0 ? (
           <div className="text-center py-8 px-4 border-2 border-dashed border-slate-300 rounded-xl bg-white">
             <p className="text-xs font-medium text-slate-500">No unassigned items found.</p>
           </div>
         ) : (
-          filteredItems.map((item) => (
-            <div
-              key={item.id}
-              draggable
-              onDragStart={(e) => {
-                e.dataTransfer.setData('text/plain', item.id);
-              }}
-              className="bg-white border-2 border-slate-300 rounded-xl p-3 shadow-xs hover:border-indigo-400 hover:shadow-md transition-all cursor-grab active:cursor-grabbing group"
-            >
-              <div className="flex items-start justify-between gap-2 mb-1.5">
-                <div>
-                  <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wide bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">
-                    {item.sku}
-                  </span>
-                  <h3 className="text-xs font-bold text-slate-900 mt-1">{item.name}</h3>
-                </div>
-                <GripVertical className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors shrink-0" />
-              </div>
+          <AnimatePresence>
+            {filteredItems.map((item, index) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.2, delay: index * 0.02 }}
+                className="bg-white border-2 border-slate-300 rounded-xl p-3 shadow-xs hover:border-indigo-400 hover:shadow-md transition-all group"
+              >
+                <div 
+                  draggable
+                  onDragStart={(e: React.DragEvent<HTMLDivElement>) => {
+                    e.dataTransfer.setData('text/plain', item.id);
+                  }}
+                  className="cursor-grab active:cursor-grabbing"
+                >
+                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                    <div>
+                      <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wide bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">
+                        {item.sku}
+                      </span>
+                      <h3 className="text-xs font-bold text-slate-900 mt-1">{item.name}</h3>
+                    </div>
+                    <GripVertical className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors shrink-0" />
+                  </div>
 
-              <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-200">
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
-                  item.weight === 'Heavy' 
-                    ? 'bg-red-50 text-red-700 border-red-200' 
-                    : item.weight === 'Medium' 
-                    ? 'bg-amber-50 text-amber-700 border-amber-200' 
-                    : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                }`}>
-                  {item.weight} Weight
-                </span>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
-                  Pick: {item.pickFrequency}
-                </span>
-              </div>
-            </div>
-          ))
+                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-200">
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
+                      item.weight === 'Heavy' 
+                        ? 'bg-red-50 text-red-700 border-red-200' 
+                        : item.weight === 'Medium' 
+                        ? 'bg-amber-50 text-amber-700 border-amber-200' 
+                        : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    }`}>
+                      {item.weight} Weight
+                    </span>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                      Pick: {item.pickFrequency}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         )}
       </div>
-    </aside>
+    </motion.aside>
   );
 }
