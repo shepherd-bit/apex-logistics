@@ -16,6 +16,40 @@ export default function App() {
     setItems(INITIAL_ITEMS);
   };
 
+  const handleDropItem = (binId: string, itemId: string) => {
+    const itemToAssign = items.find((i) => i.id === itemId);
+    if (!itemToAssign) return;
+
+    setBins((prevBins) =>
+      prevBins.map((bin) => {
+        if (bin.id === binId) {
+          return { ...bin, assignedItem: itemToAssign };
+        }
+        return bin;
+      })
+    );
+
+    setItems((prevItems) => prevItems.filter((i) => i.id !== itemId));
+  };
+
+  const handleRemoveItem = (binId: string) => {
+    let removedItem: InventoryItem | null = null;
+
+    setBins((prevBins) =>
+      prevBins.map((bin) => {
+        if (bin.id === binId) {
+          removedItem = bin.assignedItem;
+          return { ...bin, assignedItem: null };
+        }
+        return bin;
+      })
+    );
+
+    if (removedItem) {
+      setItems((prevItems) => [...prevItems, removedItem!]);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col text-slate-800">
       <Navbar 
@@ -26,7 +60,12 @@ export default function App() {
       />
       <div className="flex-1 flex overflow-hidden">
         <InventorySidebar items={items} />
-        <WarehouseGrid />
+        <WarehouseGrid 
+          bins={bins} 
+          heatmapEnabled={heatmapEnabled} 
+          onDropItem={handleDropItem} 
+          onRemoveItem={handleRemoveItem} 
+        />
         <OptimizationPanel />
       </div>
     </div>
