@@ -25,7 +25,7 @@ export default function App() {
         onToggleHeatmap={() => setHeatmapEnabled(!heatmapEnabled)} 
       />
       <div className="flex-1 flex overflow-hidden">
-        <InventorySidebar />
+        <InventorySidebar items={items} />
         <WarehouseGrid />
         <OptimizationPanel />
       </div>
