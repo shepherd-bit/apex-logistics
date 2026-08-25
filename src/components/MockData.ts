@@ -11,7 +11,8 @@ export interface WarehouseBin {
   id: string;
   zone: 'Aisle 1 (Fast Pick)' | 'Aisle 2 (Standard)' | 'Aisle 3 (Bulk/Heavy)';
   shelfLevel: 1 | 2 | 3 | 4;
-  assignedItem: InventoryItem | null;
+  assignedItem: InventoryItem | null; // Kept for backward compatibility
+  assignedItems?: InventoryItem[]; // Added for multi-item slots
 }
 
 export const INITIAL_ITEMS: InventoryItem[] = [
@@ -48,26 +49,29 @@ export const INITIAL_ITEMS: InventoryItem[] = [
 ];
 
 export const INITIAL_BINS: WarehouseBin[] = [
-  { id: 'bin-101', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 1, assignedItem: null },
-  { id: 'bin-102', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 2, assignedItem: null },
-  { id: 'bin-103', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 3, assignedItem: null },
-  { id: 'bin-104', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 4, assignedItem: null },
-  { id: 'bin-201', zone: 'Aisle 2 (Standard)', shelfLevel: 1, assignedItem: null },
-  { id: 'bin-202', zone: 'Aisle 2 (Standard)', shelfLevel: 2, assignedItem: null },
-  { id: 'bin-203', zone: 'Aisle 2 (Standard)', shelfLevel: 3, assignedItem: null },
-  { id: 'bin-204', zone: 'Aisle 2 (Standard)', shelfLevel: 4, assignedItem: null },
-  { id: 'bin-301', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 1, assignedItem: null },
-  { id: 'bin-302', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 2, assignedItem: null },
-  { id: 'bin-303', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 3, assignedItem: null },
-  { id: 'bin-304', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 4, assignedItem: null },
+  { id: 'bin-101', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 1, assignedItem: null, assignedItems: [] },
+  { id: 'bin-102', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 2, assignedItem: null, assignedItems: [] },
+  { id: 'bin-103', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 3, assignedItem: null, assignedItems: [] },
+  { id: 'bin-104', zone: 'Aisle 1 (Fast Pick)', shelfLevel: 4, assignedItem: null, assignedItems: [] },
+  { id: 'bin-201', zone: 'Aisle 2 (Standard)', shelfLevel: 1, assignedItem: null, assignedItems: [] },
+  { id: 'bin-202', zone: 'Aisle 2 (Standard)', shelfLevel: 2, assignedItem: null, assignedItems: [] },
+  { id: 'bin-203', zone: 'Aisle 2 (Standard)', shelfLevel: 3, assignedItem: null, assignedItems: [] },
+  { id: 'bin-204', zone: 'Aisle 2 (Standard)', shelfLevel: 4, assignedItem: null, assignedItems: [] },
+  { id: 'bin-301', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 1, assignedItem: null, assignedItems: [] },
+  { id: 'bin-302', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 2, assignedItem: null, assignedItems: [] },
+  { id: 'bin-303', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 3, assignedItem: null, assignedItems: [] },
+  { id: 'bin-304', zone: 'Aisle 3 (Bulk/Heavy)', shelfLevel: 4, assignedItem: null, assignedItems: [] },
 ];
 
 export function getBinHeatmapStatus(bin: WarehouseBin): { status: 'optimal' | 'warning' | 'danger' | 'empty'; message: string; color: string } {
-  if (!bin.assignedItem) {
+  const currentItems = bin.assignedItems || (bin.assignedItem ? [bin.assignedItem] : []);
+
+  if (currentItems.length === 0) {
     return { status: 'empty', message: 'Empty slot', color: 'bg-slate-50 border-dashed border-slate-300' };
   }
 
-  const hasDanger = bin.assignedItem.weight === 'Heavy' && bin.shelfLevel === 4;
+  // Check if any item in this bin has a danger condition (Heavy item on top shelf 4)
+  const hasDanger = currentItems.some((item) => item.weight === 'Heavy' && bin.shelfLevel === 4);
   if (hasDanger) {
     return { 
       status: 'danger', 
@@ -76,7 +80,8 @@ export function getBinHeatmapStatus(bin: WarehouseBin): { status: 'optimal' | 'w
     };
   }
 
-  const hasWarning = bin.assignedItem.pickFrequency === 'High' && bin.zone === 'Aisle 3 (Bulk/Heavy)';
+  // Check if any item has a warning condition
+  const hasWarning = currentItems.some((item) => item.pickFrequency === 'High' && bin.zone === 'Aisle 3 (Bulk/Heavy)');
   if (hasWarning) {
     return { 
       status: 'warning', 

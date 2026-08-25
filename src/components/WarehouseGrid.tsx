@@ -6,11 +6,17 @@ interface WarehouseGridProps {
   heatmapEnabled: boolean;
   onDropItem: (binId: string, itemId: string) => void;
   onRemoveItem: (binId: string) => void;
+  onOpenPopup: (bin: WarehouseBin) => void;
 }
 
-export default function WarehouseGrid({ bins, heatmapEnabled, onDropItem, onRemoveItem }: WarehouseGridProps) {
+export default function WarehouseGrid({ bins, heatmapEnabled, onDropItem, onRemoveItem, onOpenPopup }: WarehouseGridProps) {
   // Group bins by their respective zones
   const zones = Array.from(new Set(bins.map((b) => b.zone)));
+
+  const isBinOccupied = (bin: WarehouseBin) => {
+    const items = bin.assignedItems || (bin.assignedItem ? [bin.assignedItem] : []);
+    return items.length > 0;
+  };
 
   return (
     <main className="flex-1 bg-slate-100 p-6 overflow-y-auto">
@@ -21,7 +27,7 @@ export default function WarehouseGrid({ bins, heatmapEnabled, onDropItem, onRemo
             <p className="text-xs text-slate-500 font-medium">Drag and drop inventory items onto shelves to optimize slotting.</p>
           </div>
           <span className="text-xs font-semibold px-3 py-1 bg-slate-100 text-slate-700 rounded-lg border border-slate-300">
-            {bins.filter(b => b.assignedItem !== null).length} / {bins.length} Slots Occupied
+            {bins.filter(isBinOccupied).length} / {bins.length} Slots Occupied
           </span>
         </div>
 
@@ -32,7 +38,7 @@ export default function WarehouseGrid({ bins, heatmapEnabled, onDropItem, onRemo
               <div className="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
                 <h3 className="font-bold text-slate-800 text-xs tracking-wide uppercase">{zone}</h3>
                 <span className="text-[11px] font-semibold text-slate-500">
-                  {zoneBins.filter(b => b.assignedItem !== null).length} / {zoneBins.length} Filled
+                  {zoneBins.filter(isBinOccupied).length} / {zoneBins.length} Filled
                 </span>
               </div>
 
@@ -52,6 +58,7 @@ export default function WarehouseGrid({ bins, heatmapEnabled, onDropItem, onRemo
                       heatmapEnabled={heatmapEnabled}
                       onDropItem={() => {}}
                       onRemoveItem={onRemoveItem}
+                      onOpenPopup={onOpenPopup}
                     />
                   </div>
                 ))}
