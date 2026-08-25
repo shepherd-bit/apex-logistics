@@ -1,4 +1,5 @@
 import { Package, ShieldAlert, RotateCcw, LayoutDashboard, Flame } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { WarehouseBin } from './MockData';
 
 interface NavbarProps {
@@ -27,7 +28,12 @@ export default function Navbar({ bins, onResetLayout, heatmapEnabled, onToggleHe
   const efficiencyScore = filledCount > 0 ? Math.round((optimalCount / filledCount) * 100) : 100;
 
   return (
-    <header className="bg-white border-b-2 border-slate-300 px-8 py-3.5 shadow-sm">
+    <motion.header 
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="bg-white border-b-2 border-slate-300 px-8 py-3.5 shadow-sm"
+    >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* App Branding */}
         <div className="flex items-center gap-3">
@@ -59,16 +65,22 @@ export default function Navbar({ bins, onResetLayout, heatmapEnabled, onToggleHe
 
         {/* Actions */}
         <div className="flex items-center gap-4">
-          {/* Thermal Heatmap Toggle Switch */}
+          {/* Thermal Heatmap Toggle Container with Yellow Gradient when Active */}
           <button
             onClick={onToggleHeatmap}
             type="button"
-            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-50 transition-colors shadow-xs cursor-pointer group"
+            className={`flex items-center gap-2.5 px-3.5 py-2 rounded-xl border-2 transition-all duration-300 shadow-xs cursor-pointer group ${
+              heatmapEnabled
+                ? 'bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-200 border-amber-300 shadow-amber-100'
+                : 'bg-white border-slate-300 hover:bg-slate-50'
+            }`}
             title="Toggle Warehouse Heatmap"
           >
             <div className="flex items-center gap-1.5">
-              <Flame className={`w-3.5 h-3.5 transition-colors ${heatmapEnabled ? 'text-rose-500' : 'text-slate-400'}`} />
-              <span className="text-xs font-semibold text-slate-700">Heatmap</span>
+              <Flame className={`w-3.5 h-3.5 transition-colors ${heatmapEnabled ? 'text-amber-600' : 'text-slate-400'}`} />
+              <span className={`text-xs font-semibold ${heatmapEnabled ? 'text-amber-900' : 'text-slate-700'}`}>
+                Heatmap
+              </span>
             </div>
             
             {/* The Switch Track */}
@@ -99,6 +111,6 @@ export default function Navbar({ bins, onResetLayout, heatmapEnabled, onToggleHe
           </button>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
